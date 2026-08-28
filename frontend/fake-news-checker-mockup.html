@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ระบบตรวจจับข่าวปลอมภาษาไทย — Mockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============ Design Tokens ============ */
+      :root {
+        --paper: #f7f5f0;
+        --ink: #1a1a1a;
+        --ink-muted: #6b6963;
+        --verdict-fake: #8b2635;
+        --verdict-fact: #2d5f4c;
+        --accent-gold: #c9a961;
+        --hairline: #d8d5cc;
+      }
+
+      /* ============ Reset / Base ============ */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::selection {
+        background: var(--accent-gold);
+        color: var(--ink);
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent-gold);
+        outline-offset: 2px;
+      }
+      .hidden {
+        display: none !important;
+      }
+
+      .page {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 64px 24px 96px;
+      }
+
+      /* ============ Hero ============ */
+      .hero {
+        margin-bottom: 48px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin-bottom: 20px;
+      }
+      .headline {
+        font-family: "Noto Serif Thai", "Tiempos Headline", serif;
+        font-weight: 700;
+        font-size: clamp(34px, 7vw, 48px);
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        margin-bottom: 16px;
+      }
+      .subtext {
+        font-size: 17px;
+        color: var(--ink-muted);
+      }
+
+      /* ============ Input Zone ============ */
+      .input-zone {
+        margin-bottom: 48px;
+      }
+
+      /* Tab toggle */
+      .tabs {
+        display: flex;
+        gap: 28px;
+        border-bottom: 1px solid var(--hairline);
+        margin-bottom: 28px;
+      }
+      .tab {
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--ink-muted);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        padding: 10px 2px;
+        cursor: pointer;
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .tab:hover:not(:disabled) {
+        color: var(--ink);
+      }
+      .tab.active {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+      .tab:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
+
+      .field-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink-muted);
+        margin: 0 0 6px;
+      }
+      .field-label + .text-input {
+        margin-bottom: 20px;
+      }
+
+      .text-input {
+        display: block;
+        width: 100%;
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-size: 16px;
+        color: var(--ink);
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid var(--ink);
+        border-radius: 0;
+        padding: 10px 2px;
+        transition: border-color 0.2s ease;
+      }
+      .text-input::placeholder {
+        color: var(--ink-muted);
+        opacity: 0.75;
+      }
+      .text-input:focus {
+        outline: none;
+        border-bottom-color: var(--accent-gold);
+      }
+      textarea.text-input {
+        min-height: 120px;
+        resize: vertical;
+        line-height: 1.6;
+      }
+      .field-note {
+        font-size: 12px;
+        color: var(--ink-muted);
+        margin: 10px 0 0;
+      }
+
+      .input-hint {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin-top: 14px;
+      }
+
+      .btn-primary {
+        display: inline-block;
+        width: 100%;
+        margin-top: 24px;
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--paper);
+        background: var(--ink);
+        border: 1px solid var(--ink);
+        border-radius: 2px;
+        padding: 14px 28px;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .btn-primary:hover:not(:disabled) {
+        background: var(--paper);
+        color: var(--ink);
+      }
+      .btn-primary:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+      .btn-primary:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      .preset-label {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin: 24px 0 10px;
+      }
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-size: 14px;
+        color: var(--ink);
+        background: transparent;
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        padding: 7px 14px;
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
+      .chip:hover:not(:disabled) {
+        border-color: var(--ink);
+        background: #efede6;
+      }
+      .chip:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
+
+      /* ============ Divider ============ */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--hairline);
+        margin: 48px 0;
+      }
+
+      /* ============ Loading ============ */
+      .loading {
+        text-align: center;
+        padding: 8px 0 24px;
+      }
+      .loading-msg {
+        font-size: 15px;
+        color: var(--ink-muted);
+        margin-bottom: 16px;
+        animation: msg-in 0.3s ease;
+      }
+      @keyframes msg-in {
+        from {
+          opacity: 0;
+          transform: translateY(2px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .progress {
+        height: 2px;
+        background: var(--hairline);
+        overflow: hidden;
+      }
+      .progress-bar {
+        width: 40%;
+        height: 100%;
+        background: var(--accent-gold);
+        animation: slide 1.1s ease-in-out infinite;
+      }
+      @keyframes slide {
+        0% {
+          transform: translateX(-110%);
+        }
+        100% {
+          transform: translateX(275%);
+        }
+      }
+
+      /* ============ Result ============ */
+      .result {
+        animation: result-in 0.35s ease;
+      }
+      @keyframes result-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .news-card {
+        border: 1px solid var(--hairline);
+        border-radius: 2px;
+        padding: 20px 22px;
+        margin-bottom: 40px;
+      }
+      .news-headline {
+        font-family: "Noto Serif Thai", "Tiempos Headline", serif;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.35;
+        margin-bottom: 8px;
+      }
+      .news-meta {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin-bottom: 12px;
+      }
+      .meta-dot {
+        margin: 0 6px;
+      }
+      .news-excerpt {
+        font-size: 15px;
+        color: var(--ink);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* Verdict Stamp — จุดเดียวที่ใช้สีฉูดฉาด */
+      .stamp-wrap {
+        text-align: center;
+        margin: 0 0 40px;
+      }
+      .stamp {
+        display: inline-block;
+        font-family: "Noto Serif Thai", "Tiempos Headline", serif;
+        font-weight: 700;
+        font-size: 26px;
+        letter-spacing: 0.06em;
+        padding: 10px 22px;
+        border: 3px solid currentColor;
+        outline: 1px solid currentColor;
+        outline-offset: 4px;
+        transform: rotate(-5deg);
+      }
+      .stamp.verdict-fact {
+        color: var(--verdict-fact);
+      }
+      .stamp.verdict-fake {
+        color: var(--verdict-fake);
+      }
+      .stamp.pop {
+        animation: stamp-pop 400ms ease-out;
+      }
+      @keyframes stamp-pop {
+        0% {
+          opacity: 0;
+          transform: rotate(-5deg) scale(0.8);
+        }
+        60% {
+          opacity: 1;
+          transform: rotate(-5deg) scale(1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: rotate(-5deg) scale(1);
+        }
+      }
+
+      /* Confidence */
+      .confidence {
+        margin-bottom: 40px;
+      }
+      .confidence-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 10px;
+      }
+      .confidence-label {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .confidence-num {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .conf-track {
+        height: 8px;
+        background: #e9e6dd;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .conf-bar {
+        height: 100%;
+        width: 0%;
+        border-radius: 2px;
+        transition: width 0.6s ease;
+      }
+      .conf-bar.verdict-fact {
+        background: var(--verdict-fact);
+      }
+      .conf-bar.verdict-fake {
+        background: var(--verdict-fake);
+      }
+
+      /* Why box */
+      .why {
+        margin-bottom: 40px;
+      }
+      .why-title {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .reasons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .reason {
+        font-size: 13px;
+        color: var(--ink);
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        padding: 5px 12px;
+        background: transparent;
+      }
+
+      .btn-ghost {
+        display: inline-block;
+        width: 100%;
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ink);
+        background: transparent;
+        border: 1px solid var(--ink);
+        border-radius: 2px;
+        padding: 12px 24px;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .offline-badge {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: var(--verdict-fake);
+        border: 1px solid var(--verdict-fake);
+        border-radius: 2px;
+        padding: 4px 10px;
+        margin: 0 0 24px;
+      }
+      .btn-ghost:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .btn-ghost:active {
+        transform: translateY(1px);
+      }
+      .btn-ghost + .btn-ghost {
+        margin-top: 8px;
+      }
+
+      .demo-note {
+        font-size: 12px;
+        color: var(--ink-muted);
+        text-align: center;
+        margin-top: 16px;
+      }
+
+      /* ============ Reduced Motion ============ */
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .stamp.pop {
+          animation: stamp-fade 400ms ease-out;
+        }
+        @keyframes stamp-fade {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .loading-msg {
+          animation: none;
+        }
+        .progress-bar {
+          animation-duration: 2.2s;
+        }
+      }
+
+      /* ============ Mobile ============ */
+      @media (max-width: 480px) {
+        .page {
+          padding: 40px 16px 64px;
+        }
+        .hero {
+          margin-bottom: 40px;
+        }
+        .stamp {
+          font-size: 22px;
+          padding: 8px 16px;
+        }
+        .tabs {
+          gap: 16px;
+        }
+        .presets .chip {
+          flex: 1 1 auto;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <!-- Hero -->
+      <header class="hero">
+        <p class="eyebrow">AI Mini-Project · ตรวจสอบข่าวปลอม</p>
+        <h1 class="headline">ระบบตรวจจับข่าวปลอมภาษาไทย</h1>
+        <p class="subtext">วางเนื้อข่าวหรือลิงก์ ให้โมเดล AI ช่วยกลั่นกรองว่าน่าเชื่อถือแค่ไหน</p>
+      </header>
+
+      <!-- Input Zone -->
+      <section class="input-zone" aria-label="กรอกข่าวเพื่อตรวจสอบ">
+        <div class="tabs" role="tablist" aria-label="โหมดรับข้อมูล">
+          <button
+            id="tab-text"
+            class="tab active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-text"
+            type="button"
+          >
+            วางข้อความข่าว
+          </button>
+          <!-- แท็บ "วางลิงก์ข่าว" ระงับไว้ชั่วคราว — คืนได้โดยลบ comment ออก
+          <button id="tab-url" class="tab" role="tab" aria-selected="false" aria-controls="panel-url" type="button">
+            วางลิงก์ข่าว
+          </button>
+          -->
+        </div>
+
+        <!-- Mode A: text -->
+        <div id="panel-text" role="tabpanel" aria-labelledby="tab-text">
+          <label class="field-label" for="headline-input">พาดหัวข่าว</label>
+          <input
+            id="headline-input"
+            class="text-input"
+            type="text"
+            placeholder="เช่น ดื่มน้ำมะนาวร้อนรักษามะเร็งได้ภายใน 3 วัน"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <label class="field-label" for="body-input">เนื้อหาข่าว</label>
+          <textarea
+            id="body-input"
+            class="text-input"
+            rows="4"
+            placeholder="วางเนื้อหาข่าวที่ต้องการตรวจสอบที่นี่..."
+            spellcheck="false"
+          ></textarea>
+          <p class="field-note">โหมดนี้ตรงกับข้อมูลที่ใช้เทรนโมเดลโดยตรง (พาดหัว + เนื้อหาข่าว)</p>
+        </div>
+
+        <!-- Mode B: url (ระงับไว้ชั่วคราว — คืนได้โดยลบ comment ออก)
+        <div id="panel-url" class="hidden" role="tabpanel" aria-labelledby="tab-url">
+          <input
+            id="url-input"
+            class="text-input"
+            type="url"
+            placeholder="เช่น https://www.thairath.co.th/news/..."
+            aria-label="URL ข่าวที่ต้องการตรวจสอบ"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <p class="field-note">ระบบจะพยายามดึงเนื้อหาข่าวจากลิงก์ให้อัตโนมัติ (บางเว็บไซต์อาจดึงไม่สำเร็จ)</p>
+        </div>
+        -->
+
+        <p id="input-hint" class="input-hint hidden" role="status"></p>
+        <button id="check-btn" class="btn-primary" type="button" disabled>ตรวจสอบข่าว</button>
+
+        <p class="preset-label">หรือลองตัวอย่าง:</p>
+        <div id="presets" class="presets"></div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- Result Zone -->
+      <section id="result-zone" class="result-zone" aria-live="polite">
+        <!-- Loading -->
+        <div id="loading" class="loading hidden">
+          <p id="loading-msg" class="loading-msg">กำลังเตรียมข้อความข่าว...</p>
+          <div class="progress"><div class="progress-bar"></div></div>
+        </div>
+
+        <!-- Result: success -->
+        <div id="result-success" class="result hidden">
+          <article class="news-card">
+            <h2 class="news-headline" id="r-headline"></h2>
+            <p class="news-meta" id="r-meta"></p>
+            <p class="news-excerpt" id="r-excerpt"></p>
+          </article>
+
+          <p id="offline-badge" class="offline-badge hidden">[Offline Demo Mode]</p>
+
+          <div class="stamp-wrap">
+            <div id="stamp" class="stamp" role="status"></div>
+          </div>
+
+          <div class="confidence">
+            <div class="confidence-head">
+              <span class="confidence-label">ความมั่นใจของโมเดล</span>
+              <span class="confidence-num" id="r-conf"></span>
+            </div>
+            <div class="conf-track"><div class="conf-bar" id="conf-bar"></div></div>
+          </div>
+
+          <!-- กล่อง "ทำไมโมเดลถึงตัดสินใจแบบนี้" ระงับไว้ชั่วคราว — คืนได้โดยลบ comment ออก
+          <div class="why">
+            <h3 class="why-title">ทำไมโมเดลถึงตัดสินใจแบบนี้</h3>
+            <div id="r-reasons" class="reasons"></div>
+          </div>
+          -->
+
+          <button id="again-btn" class="btn-ghost" type="button">ตรวจข่าวอื่นต่อ</button>
+        </div>
+
+        <!-- Result: url fetch failed (fallback) -->
+        <div id="result-fallback" class="result hidden">
+          <article class="news-card">
+            <h2 class="news-headline">ไม่พบเนื้อหาข่าวจากลิงก์นี้</h2>
+            <p class="news-excerpt">
+              ระบบไม่สามารถดึงเนื้อหาข่าวจากลิงก์นี้ได้ (โหมดสาธิตจำลองกรณีเว็บไซต์บล็อกการดึงข้อมูล) —
+              แนะนำให้สลับไปโหมด "วางข้อความข่าว" แล้ววางพาดหัวและเนื้อหาข่าวตรง ๆ ซึ่งตรงกับรูปแบบที่โมเดลรับ input
+              พอดี
+            </p>
+          </article>
+          <button id="go-text-btn" class="btn-ghost" type="button">สลับไปโหมดวางข้อความข่าว</button>
+          <button id="again-fb-btn" class="btn-ghost" type="button">ตรวจข่าวอื่นต่อ</button>
+        </div>
+
+        <p id="demo-note" class="demo-note hidden">โหมดสาธิต — ผลลัพธ์จากข้อมูลตัวอย่าง ไม่ได้วิเคราะห์ข่าวจริง</p>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        /* ============ Mock Data (Fixtures) ============ */
+        var MOCK_RESULTS = [
+          {
+            id: "sample-1",
+            mode: "text",
+            label: "📝 ข่าวประกาศกระทรวง (โหมดข้อความ · คาดว่าจริง)",
+            headline: "กระทรวงสาธารณสุขแนะนำวิธีป้องกันไข้หวัดใหญ่ช่วงเปลี่ยนฤดู",
+            body: "กรมควบคุมโรค กระทรวงสาธารณสุข แนะนำประชาชนฉีดวัคซีนป้องกันไข้หวัดใหญ่ประจำปี พร้อมล้างมือบ่อยๆ และสวมหน้ากากอนามัยเมื่ออยู่ในที่แออัด โดยเฉพาะกลุ่มผู้สูงอายุและเด็กเล็กซึ่งเป็นกลุ่มเสี่ยงต่อภาวะแทรกซ้อน พร้อมย้ำว่าการป้องกันด้วยวัคซีนเป็นวิธีที่มีประสิทธิภาพที่สุดในช่วงฤดูที่มีการระบาด",
+            verdict: "fact",
+            confidence: 91.2,
+            reasons: [
+              "อ้างอิงหน่วยงานราชการชัดเจน",
+              "ภาษาเป็นทางการ ไม่ใช้คำเกินจริง",
+              "สอดคล้องกับข้อมูลทางการแพทย์ทั่วไป",
+            ],
+          },
+          {
+            id: "sample-2",
+            mode: "text",
+            label: "📝 ข่าวสมุนไพรอ้างสรรพคุณ (โหมดข้อความ · คาดว่าปลอม)",
+            headline: "ดื่มน้ำมะนาวร้อนรักษามะเร็งได้ภายใน 3 วัน แพทย์ทั่วโลกยืนยัน!",
+            body: "เผยเคล็ดลับสมุนไพรใกล้ตัวที่หมอไม่อยากให้รู้ ดื่มทุกเช้าติดต่อกัน 3 วันเห็นผลจริง หายจากโรคร้ายแรงได้แบบไม่ต้องพึ่งยา วิธีนี้เป็นความลับที่ถูกปิดบังมานาน เพราะบริษัทยาไม่ต้องการให้ประชาชนรู้ความจริง พร้อมแนะนำให้รีบแชร์ต่อให้คนที่คุณรักก่อนข้อมูลจะถูกลบ",
+            verdict: "fake",
+            confidence: 96.7,
+            reasons: [
+              'อ้างสรรพคุณเกินจริง ("รักษาได้ภายใน 3 วัน")',
+              "ไม่มีแหล่งอ้างอิงทางการแพทย์",
+              'ใช้ถ้อยคำกระตุ้นอารมณ์ ("หมอไม่อยากให้รู้")',
+            ],
+          },
+          {
+            id: "sample-3",
+            mode: "url",
+            label: "🔗 ลิงก์ข่าวสุขภาพ (โหมดลิงก์ · คาดว่าจริง)",
+            url: "https://www.example-news.co.th/health/67890",
+            headline: "อากาศเปลี่ยนแปลงบ่อย เตือนกลุ่มเสี่ยงดูแลสุขภาพเป็นพิเศษ",
+            source: "sanook.com",
+            date: "20 ส.ค. 2569",
+            excerpt:
+              "นายแพทย์จากโรงพยาบาลรัฐเปิดเผยว่าช่วงนี้อากาศแปรปรวน ควรดูแลสุขภาพโดยเฉพาะกลุ่มผู้สูงอายุและเด็กเล็ก...",
+            verdict: "fact",
+            confidence: 88.5,
+            reasons: ["แหล่งข่าวมีความน่าเชื่อถือ", "มีการอ้างอิงผู้เชี่ยวชาญ", "เนื้อหาสอดคล้องกับข้อเท็จจริงทั่วไป"],
+          },
+          {
+            id: "sample-4",
+            mode: "url",
+            fetchFail: true,
+            label: "🔗 ลิงก์ที่ดึงไม่สำเร็จ (โหมดลิงก์ · จำลองกรณี fallback)",
+            url: "https://www.example-blocked-site.com/article/999",
+          },
+        ];
+
+        var LOADING_STEPS = {
+          text: ["กำลังเตรียมข้อความข่าว...", "กำลังประมวลผลภาษา...", "กำลังวิเคราะห์ด้วยโมเดล..."],
+          url: ["กำลังดึงเนื้อหาข่าว...", "กำลังประมวลผลภาษา...", "กำลังวิเคราะห์ด้วยโมเดล..."],
+        };
+        var STEP_MS = 800;
+
+        /* ============ Elements ============ */
+        var tabText = document.getElementById("tab-text");
+        var tabUrl = document.getElementById("tab-url");
+        var panelText = document.getElementById("panel-text");
+        var panelUrl = document.getElementById("panel-url");
+        var headlineInput = document.getElementById("headline-input");
+        var bodyInput = document.getElementById("body-input");
+        var urlInput = document.getElementById("url-input");
+        var hint = document.getElementById("input-hint");
+        var checkBtn = document.getElementById("check-btn");
+        var presetsEl = document.getElementById("presets");
+        var loading = document.getElementById("loading");
+        var loadingMsg = document.getElementById("loading-msg");
+        var resultSuccess = document.getElementById("result-success");
+        var resultFallback = document.getElementById("result-fallback");
+        var resultZone = document.getElementById("result-zone");
+        var demoNote = document.getElementById("demo-note");
+        var offlineBadge = document.getElementById("offline-badge");
+        var rHeadline = document.getElementById("r-headline");
+        var rMeta = document.getElementById("r-meta");
+        var rExcerpt = document.getElementById("r-excerpt");
+        var stamp = document.getElementById("stamp");
+        var rConf = document.getElementById("r-conf");
+        var confBar = document.getElementById("conf-bar");
+        var rReasons = document.getElementById("r-reasons");
+        var againBtn = document.getElementById("again-btn");
+        var goTextBtn = document.getElementById("go-text-btn");
+        var againFbBtn = document.getElementById("again-fb-btn");
+
+        var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var currentMode = "text";
+        var loadingTimer = null;
+        var API_BASE = "http://localhost:8000";
+        var API_TIMEOUT_MS = 3000;
+        /* URL mode ถูกระงับไว้ชั่วคราว — จะกลับเป็น true อัตโนมัติเมื่อคืน tab/panel */
+        var urlModeEnabled = !!(tabUrl && panelUrl && urlInput);
+
+        /* ============ Helpers ============ */
+        function hashUrl(str) {
+          var h = 0;
+          for (var i = 0; i < str.length; i++) {
+            h = (h * 31 + str.charCodeAt(i)) >>> 0;
+          }
+          return h;
+        }
+
+        function textFixtures() {
+          return MOCK_RESULTS.filter(function (r) {
+            return r.mode === "text";
+          });
+        }
+        function urlOkFixtures() {
+          return MOCK_RESULTS.filter(function (r) {
+            return r.mode === "url" && !r.fetchFail;
+          });
+        }
+
+        /* Mode A: ข้อความตรงกับ fixture เป๊ะ → ผลของ fixture นั้น (preset ต้องตรงเสมอ);
+     ข้อความอื่น → deterministic จาก hash */
+        function pickTextResult(headline, body) {
+          var h = headline.trim(),
+            b = body.trim();
+          var list = textFixtures();
+          for (var i = 0; i < list.length; i++) {
+            if (list[i].headline === h && list[i].body === b) return list[i];
+          }
+          return list[hashUrl(h + "\n" + b) % list.length];
+        }
+
+        /* Mode B: ตรง preset → ผลนั้น; URL พิมพ์เอง → deterministic จากชุดที่ดึงสำเร็จ */
+        function pickUrlResult(url) {
+          var t = url.trim();
+          for (var i = 0; i < MOCK_RESULTS.length; i++) {
+            var r = MOCK_RESULTS[i];
+            if (r.mode === "url" && t === r.url) return r;
+          }
+          var ok = urlOkFixtures();
+          return ok[hashUrl(t) % ok.length];
+        }
+
+        function getFormFilled() {
+          if (currentMode === "text") {
+            return headlineInput.value.trim() !== "" && bodyInput.value.trim() !== "";
+          }
+          return urlInput && urlInput.value.trim() !== "";
+        }
+
+        function updateButtonState() {
+          checkBtn.disabled = !getFormFilled();
+          if (getFormFilled()) hint.classList.add("hidden");
+        }
+
+        function showHint(msg) {
+          hint.textContent = msg;
+          hint.classList.remove("hidden");
+        }
+        function hideHint() {
+          hint.classList.add("hidden");
+        }
+
+        function switchTab(mode) {
+          if (mode === "url" && !urlModeEnabled) return;
+          currentMode = mode;
+          var isText = mode === "text";
+          tabText.classList.toggle("active", isText);
+          if (tabUrl) tabUrl.classList.toggle("active", !isText);
+          tabText.setAttribute("aria-selected", isText ? "true" : "false");
+          if (tabUrl) tabUrl.setAttribute("aria-selected", isText ? "false" : "true");
+          panelText.classList.toggle("hidden", !isText);
+          if (panelUrl) panelUrl.classList.toggle("hidden", isText);
+          hideHint();
+          updateButtonState();
+        }
+
+        function setLoadingUI(on) {
+          checkBtn.disabled = on || !getFormFilled();
+          tabText.disabled = on;
+          if (tabUrl) tabUrl.disabled = on;
+          var chips = presetsEl.querySelectorAll(".chip");
+          for (var i = 0; i < chips.length; i++) chips[i].disabled = on;
+        }
+
+        function animateLoadingMsg(text) {
+          loadingMsg.textContent = text;
+          loadingMsg.classList.remove("loading-msg"); /* retrigger fade */
+          void loadingMsg.offsetWidth;
+          loadingMsg.classList.add("loading-msg");
+        }
+
+        function scrollToResult() {
+          resultZone.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+        }
+
+        function scrollToInput() {
+          document
+            .querySelector(".input-zone")
+            .scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+        }
+
+        /* ============ Flow ============ */
+        function startCheck() {
+          if (!getFormFilled()) {
+            showHint(
+              currentMode === "text" ? "กรุณากรอกพาดหัวข่าวและเนื้อหาข่าวก่อนตรวจสอบ" : "กรุณาใส่ลิงก์ข่าวก่อนตรวจสอบ",
+            );
+            if (currentMode === "text") {
+              (headlineInput.value.trim() ? bodyInput : headlineInput).focus();
+            } else {
+              urlInput.focus();
+            }
+            return;
+          }
+          hideHint();
+
+          setLoadingUI(true);
+          loading.classList.remove("hidden");
+          resultSuccess.classList.add("hidden");
+          resultFallback.classList.add("hidden");
+          demoNote.classList.add("hidden");
+
+          var steps = LOADING_STEPS[currentMode];
+          animateLoadingMsg(steps[0]);
+          var step = 1;
+          loadingTimer = setInterval(function () {
+            if (step < steps.length) {
+              animateLoadingMsg(steps[step]);
+              step++;
+            } else {
+              clearInterval(loadingTimer);
+              loadingTimer = null;
+            }
+          }, STEP_MS);
+
+          setTimeout(finishCheck, STEP_MS * steps.length);
+        }
+
+        function finishCheck() {
+          hideOffline();
+          demoNote.classList.add("hidden");
+          callPredict();
+        }
+
+        function fetchWithTimeout(url, opts, ms) {
+          var ctrl = "AbortController" in window ? new AbortController() : null;
+          opts = opts || {};
+          if (ctrl) opts.signal = ctrl.signal;
+          var timer = setTimeout(function () {
+            if (ctrl) ctrl.abort();
+          }, ms);
+          return fetch(url, opts).then(
+            function (res) {
+              clearTimeout(timer);
+              if (!res.ok) throw new Error("HTTP " + res.status);
+              return res.json();
+            },
+            function (err) {
+              clearTimeout(timer);
+              throw err;
+            },
+          );
+        }
+
+        function callPredict() {
+          var body = {};
+          if (currentMode === "text") {
+            body = { title: headlineInput.value.trim(), detail: bodyInput.value.trim() };
+          } else {
+            body = { text: urlInput.value.trim() };
+          }
+          fetchWithTimeout(
+            API_BASE + "/api/predict",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(body),
+            },
+            API_TIMEOUT_MS,
+          )
+            .then(renderLiveResult)
+            .catch(renderMockResult);
+        }
+
+        function showOffline() {
+          offlineBadge.classList.remove("hidden");
+          demoNote.classList.remove("hidden");
+        }
+        function hideOffline() {
+          offlineBadge.classList.add("hidden");
+          demoNote.classList.add("hidden");
+        }
+
+        function renderLiveResult(res) {
+          hideOffline();
+          var isFake = res.label === "Fake";
+          var r = {
+            headline: headlineInput.value.trim(),
+            body: bodyInput.value.trim(),
+            verdict: isFake ? "fake" : "fact",
+            confidence: res.confidence * 100,
+            reasons: [],
+          };
+          renderResult(r, { text: true, headline: r.headline, body: r.body, meta: "โมเดล " + res.model + " · API " + res.latency_ms + " ms" });
+          resultSuccess.classList.remove("hidden");
+          loading.classList.add("hidden");
+          setLoadingUI(false);
+          scrollToResult();
+        }
+
+        function renderMockResult() {
+          var showedFallback = false;
+          if (currentMode === "text") {
+            var r = pickTextResult(headlineInput.value, bodyInput.value);
+            renderResult(r, { text: true, headline: headlineInput.value.trim(), body: bodyInput.value.trim() });
+          } else {
+            var ru = pickUrlResult(urlInput.value);
+            if (ru.fetchFail) {
+              resultFallback.classList.remove("hidden");
+              showedFallback = true;
+            } else {
+              renderResult(ru, { text: false });
+            }
+          }
+          if (!showedFallback) {
+            resultSuccess.classList.remove("hidden");
+            showOffline();
+          }
+          loading.classList.add("hidden");
+          setLoadingUI(false);
+          scrollToResult();
+        }
+
+        function renderResult(r, info) {
+          if (info.text) {
+            rHeadline.textContent = info.headline;
+            rMeta.textContent = info.meta || "ข้อความที่ใช้ตรวจสอบ · โหมดวางข้อความ";
+            rExcerpt.textContent = info.body;
+          } else {
+            rHeadline.textContent = r.headline;
+            rMeta.textContent = r.source + " · " + r.date;
+            rExcerpt.textContent = r.excerpt;
+          }
+
+          var isFake = r.verdict === "fake";
+          stamp.className = "stamp " + (isFake ? "verdict-fake" : "verdict-fact");
+          stamp.textContent = isFake ? "ข่าวปลอม" : "ข่าวจริง";
+          void stamp.offsetWidth; /* restart animation */
+          stamp.classList.add("pop");
+
+          rConf.textContent = r.confidence.toFixed(1) + "%";
+          confBar.classList.remove("verdict-fact", "verdict-fake");
+          confBar.classList.add(isFake ? "verdict-fake" : "verdict-fact");
+          confBar.style.width = "0%";
+          void confBar.offsetWidth;
+          requestAnimationFrame(function () {
+            confBar.style.width = r.confidence + "%";
+          });
+
+          if (rReasons) {
+            rReasons.innerHTML = "";
+            for (var i = 0; i < r.reasons.length; i++) {
+              var chip = document.createElement("span");
+              chip.className = "reason";
+              chip.textContent = r.reasons[i];
+              rReasons.appendChild(chip);
+            }
+          }
+        }
+
+        function resetView() {
+          if (loadingTimer) {
+            clearInterval(loadingTimer);
+            loadingTimer = null;
+          }
+          loading.classList.add("hidden");
+          resultSuccess.classList.add("hidden");
+          resultFallback.classList.add("hidden");
+          demoNote.classList.add("hidden");
+          hideOffline();
+          hideHint();
+          headlineInput.value = "";
+          bodyInput.value = "";
+          if (urlInput) urlInput.value = "";
+          switchTab("text");
+          setLoadingUI(false);
+          window.scrollTo({ top: 0, behavior: prefersReduced ? "auto" : "smooth" });
+          headlineInput.focus();
+        }
+
+        function goToTextMode() {
+          if (loadingTimer) {
+            clearInterval(loadingTimer);
+            loadingTimer = null;
+          }
+          loading.classList.add("hidden");
+          resultSuccess.classList.add("hidden");
+          resultFallback.classList.add("hidden");
+          demoNote.classList.add("hidden");
+          hideOffline();
+          if (urlInput) urlInput.value = "";
+          switchTab("text");
+          setLoadingUI(false);
+          scrollToInput();
+          headlineInput.focus();
+        }
+
+        /* ============ Events ============ */
+        function buildPresets() {
+          for (var i = 0; i < MOCK_RESULTS.length; i++) {
+            (function (mock) {
+              if (mock.mode === "url" && !urlModeEnabled) return; /* ปิด preset ลิงก์เมื่อโหมด url ถูกระงับ */
+              var btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "chip";
+              btn.textContent = mock.label;
+              btn.addEventListener("click", function () {
+                switchTab(mock.mode);
+                if (mock.mode === "text") {
+                  headlineInput.value = mock.headline;
+                  bodyInput.value = mock.body;
+                } else {
+                  urlInput.value = mock.url;
+                }
+                startCheck();
+              });
+              presetsEl.appendChild(btn);
+            })(MOCK_RESULTS[i]);
+          }
+        }
+
+        checkBtn.addEventListener("click", startCheck);
+
+        [headlineInput, bodyInput, urlInput].filter(Boolean).forEach(function (el) {
+          el.addEventListener("input", function () {
+            hideHint();
+            updateButtonState();
+          });
+          el.addEventListener("blur", function () {
+            if (!getFormFilled()) {
+              showHint(
+                currentMode === "text"
+                  ? "กรุณากรอกพาดหัวข่าวและเนื้อหาข่าวก่อนตรวจสอบ"
+                  : "กรุณาใส่ลิงก์ข่าวก่อนตรวจสอบ",
+              );
+            }
+          });
+        });
+
+        headlineInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            bodyInput.focus();
+          }
+        });
+        bodyInput.addEventListener("keydown", function (e) {
+          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            startCheck();
+          }
+        });
+        if (urlInput) {
+          urlInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              startCheck();
+            }
+          });
+        }
+
+        function onTabKey(e) {
+          var tabs = [tabText, tabUrl].filter(Boolean);
+          var idx = tabs.indexOf(document.activeElement);
+          if (idx === -1) return;
+          if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+            e.preventDefault();
+            var next = (idx + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+            tabs[next].focus();
+            switchTab(tabs[next] === tabText ? "text" : "url");
+          }
+        }
+        tabText.addEventListener("keydown", onTabKey);
+        if (tabUrl) tabUrl.addEventListener("keydown", onTabKey);
+        tabText.addEventListener("click", function () {
+          switchTab("text");
+        });
+        if (tabUrl) {
+          tabUrl.addEventListener("click", function () {
+            switchTab("url");
+          });
+        }
+
+        againBtn.addEventListener("click", resetView);
+        againFbBtn.addEventListener("click", resetView);
+        goTextBtn.addEventListener("click", goToTextMode);
+
+        buildPresets();
+      })();
+    </script>
+  </body>
+</html>

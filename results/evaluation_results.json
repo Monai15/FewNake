@@ -1,0 +1,58 @@
+{
+  "dataset": "LimeSoda (binary Fact/Fake only)",
+  "n_train": 2748,
+  "n_test": 688,
+  "model": "TfidfVectorizer(max_features=10000, ngram_range=(1,2)) + LogisticRegression(max_iter=1000, class_weight='balanced')",
+  "accuracy": 0.873546511627907,
+  "precision_macro": 0.8733059020187732,
+  "recall_macro": 0.8712152209492635,
+  "f1_macro": 0.8721066632479728,
+  "confusion_matrix": [
+    [
+      264,
+      48
+    ],
+    [
+      39,
+      337
+    ]
+  ],
+  "train_time_sec": 3.5461456775665283,
+  "predict_latency_ms_per_sample": 5.146118444065715,
+  "models": [
+    {
+      "model": "ComplementNB",
+      "cv_f1_macro_mean": 0.877495170547175,
+      "cv_f1_macro_std": 0.011970969413230042,
+      "test_accuracy": 0.8502906976744186,
+      "test_precision_macro": 0.8518484793298124,
+      "test_recall_macro": 0.8458469721767594,
+      "test_f1_macro": 0.8478578712897858,
+      "latency_ms_per_sample": 0.42273797268091245,
+      "train_time_sec": 1.6207952499389648
+    },
+    {
+      "model": "LinearSVC (calibrated)",
+      "cv_f1_macro_mean": 0.9032229089954711,
+      "cv_f1_macro_std": 0.014027248274500416,
+      "test_accuracy": 0.8880813953488372,
+      "test_precision_macro": 0.888050233594788,
+      "test_recall_macro": 0.8858769776322968,
+      "test_f1_macro": 0.8868070467826885,
+      "latency_ms_per_sample": 0.3139213767162589,
+      "train_time_sec": 1.6672842502593994
+    },
+    {
+      "model": "LogisticRegression (baseline)",
+      "cv_f1_macro_mean": 0.8957333402987212,
+      "cv_f1_macro_std": 0.015537995068329733,
+      "test_accuracy": 0.873546511627907,
+      "test_precision_macro": 0.8733059020187732,
+      "test_recall_macro": 0.8712152209492635,
+      "test_f1_macro": 0.8721066632479728,
+      "latency_ms_per_sample": 0.3226510314054267,
+      "train_time_sec": 1.4882380962371826
+    }
+  ],
+  "best_model": "LinearSVC (calibrated)"
+}
