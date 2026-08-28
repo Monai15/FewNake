@@ -22,7 +22,7 @@ from sklearn.pipeline import Pipeline
 
 _ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = _ROOT / "data"
-FILES = [DATA_DIR / "train_v1_v1.jsonl", DATA_DIR / "val_v1_v1.jsonl", DATA_DIR / "test_v1_v1.jsonl"]
+FILES = [DATA_DIR / "train_v1.jsonl", DATA_DIR / "val_v1.jsonl", DATA_DIR / "test_v1.jsonl"]
 LABEL_MAP = {"Fact News": 0, "Fake News": 1}
 
 

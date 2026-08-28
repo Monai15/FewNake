@@ -21,8 +21,8 @@ Raw Thai text (title + detail)
 
 ```
 FewNake/
-├── src/                 # code (FastAPI, CLI, training, benchmark, demo picker)
-├── data/                # LimeSoda train/val/test jsonl
+├── src/                 # code (FastAPI, CLI, training, benchmark, demo picker, data download)
+├── data/                # LimeSoda jsonl — NOT in repo, run src/download_data.py
 ├── models/              # model_baseline.joblib, model_best.joblib
 ├── results/             # evaluation_results.json, benchmark_results.md, demo_examples.json
 ├── frontend/            # fake-news-checker-mockup.html
@@ -34,6 +34,9 @@ FewNake/
 
 ```bash
 python3 -m pip install --user -r requirements.txt
+
+# download dataset into data/ (~50MB, not tracked in git)
+python3 src/download_data.py
 ```
 
 ## Run
@@ -53,7 +56,7 @@ python3 src/predict.py --title "พาดหัวข่าว..." --detail "เ
 ## Reproduce
 
 ```bash
-# Baseline + evaluation (writes results/, models/)
+# Baseline + evaluation (writes results/, models/) — needs data/ first
 python3 src/train_baseline.py
 
 # Multi-model benchmark (best model → model_best.joblib)
