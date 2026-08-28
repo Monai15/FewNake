@@ -32,23 +32,23 @@ FewNake/
 ## Setup
 
 ```bash
-python3 -m pip install --user -r requirements.txt
+py -m pip install --user -r requirements.txt
 
 # download dataset into data/ (~50MB, not tracked in git)
-python3 src/download_data.py
+py src/download_data.py
 ```
 
 ## Run
 
 ```bash
 # 1. Start backend (from repo root)
-python3 -m uvicorn src.main:app --host 0.0.0.0 --port 8000
+py -m uvicorn src.main:app --host 0.0.0.0 --port 8000
 
 # 2. Open the web UI in a browser
-open frontend/fake-news-checker-mockup.html
+start frontend/fake-news-checker-mockup.html
 
 # 3. Or use the CLI
-python3 src/predict.py --title "พาดหัวข่าว..." --detail "เนื้อหาข่าว..."
+py src/predict.py --title "พาดหัวข่าว..." --detail "เนื้อหาข่าว..."
 # → {"label": "Fake", "confidence": 0.98, "latency_ms": 8.25}
 ```
 
@@ -56,22 +56,22 @@ python3 src/predict.py --title "พาดหัวข่าว..." --detail "เ
 
 ```bash
 # Baseline + evaluation (writes results/, models/) — needs data/ first
-python3 src/train_baseline.py
+py src/train_baseline.py
 
 # Multi-model benchmark (best model → model_best.joblib)
-python3 src/benchmark.py
+py src/benchmark.py
 
 # Pick deterministic live-demo examples (2 Fact, 2 Fake)
-python3 src/pick_demo_examples.py
+py src/pick_demo_examples.py
 ```
 
 ## Results
 
-| Model | 5-fold CV Macro F1 | Test Acc | Test Macro F1 | Latency (ms/sample) |
-|---|---|---|---|---|
-| ComplementNB | 0.8775 ± 0.0120 | 0.8503 | 0.8479 | 0.42 |
-| LogisticRegression (baseline) | 0.8957 ± 0.0155 | 0.8735 | 0.8721 | 0.32 |
-| **LinearSVC (calibrated)** ⭐ | **0.9032 ± 0.0140** | **0.8881** | **0.8868** | **0.31** |
+| Model                         | 5-fold CV Macro F1  | Test Acc   | Test Macro F1 | Latency (ms/sample) |
+| ----------------------------- | ------------------- | ---------- | ------------- | ------------------- |
+| ComplementNB                  | 0.8775 ± 0.0120     | 0.8503     | 0.8479        | 0.42                |
+| LogisticRegression (baseline) | 0.8957 ± 0.0155     | 0.8735     | 0.8721        | 0.32                |
+| **LinearSVC (calibrated)** ⭐ | **0.9032 ± 0.0140** | **0.8881** | **0.8868**    | **0.31**            |
 
 Full details: `results/benchmark_results.md`, `results/evaluation_results.json`.
 
