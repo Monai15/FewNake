@@ -11,3 +11,6 @@ Thumbs.db
 
 # Data (large, download via src/download_data.py)
 data/
+
+# UI screenshots (local only)
+screenshots/

@@ -26,8 +26,7 @@ FewNake/
 ├── models/              # model_baseline.joblib, model_best.joblib
 ├── results/             # evaluation_results.json, benchmark_results.md, demo_examples.json
 ├── frontend/            # fake-news-checker-mockup.html
-├── docs/                # demo_summary.md
-└── screenshots/         # UI captures (landing, live demo, offline fallback)
+└── docs/                # demo_summary.md
 ```
 
 ## Setup
