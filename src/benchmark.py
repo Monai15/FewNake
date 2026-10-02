@@ -84,7 +84,7 @@ def main() -> None:
     (_root / "results").mkdir(exist_ok=True)
     (_root / "models").mkdir(exist_ok=True)
     # update evaluation_results.json
-    with open(_root / "results" / "evaluation_results.json") as fh:
+    with open(_root / "results" / "evaluation_results.json", encoding="utf-8") as fh:
         results = json.load(fh)
     results["models"] = rows
     results["best_model"] = best[0]

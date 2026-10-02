@@ -29,7 +29,7 @@ LABEL_MAP = {"Fact News": 0, "Fake News": 1}
 def load_soda() -> pd.DataFrame:
     rows = []
     for path in FILES:
-        with open(path) as fh:
+        with open(path, encoding="utf-8") as fh:
             for line in fh:
                 rec = json.loads(line)
                 tag = rec.get("Document Tag")
