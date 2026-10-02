@@ -9,6 +9,10 @@ venv/
 .DS_Store
 Thumbs.db
 
+# Editor / notebook (local only)
+.obsidian/
+.ipynb_checkpoints/
+
 # Data (large, download via src/download_data.py)
 data/
 

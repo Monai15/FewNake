@@ -51,10 +51,10 @@ Web UI calls the FastAPI backend; if the server drops, a 3-second timeout falls 
 ## Run
 ```bash
 # backend (terminal 1)
-python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+python3 -m uvicorn main:app --host localhost --port 8000
+#   -> Uvicorn running on http://localhost:8000  (คลิกที่ข้อความใน terminal ได้เลย)
 
-# frontend (terminal 2) — open in browser
-open fake-news-checker-mockup.html
+# frontend — ไม่ต้องเปิดไฟล์เอง เปิด http://localhost:8000 ในเบราว์เซอร์ (backend เสิร์ฟหน้าเว็บให้)
 
 # CLI
 python3 predict.py --title "..." --detail "..."

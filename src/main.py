@@ -1,6 +1,7 @@
 """Phase 3: FastAPI inference service for Thai fake-news detection.
 
 Endpoints:
+  GET  /             -> single-file demo UI (frontend/fake-news-checker-mockup.html)
   POST /api/predict  {title?, detail?, text?} -> {label, confidence, latency_ms, model}
   GET  /health
 """
@@ -10,8 +11,9 @@ from pathlib import Path
 from typing import Optional
 
 import joblib
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 try:
@@ -24,6 +26,7 @@ _DEFAULT = _ROOT / "models" / "model_best.joblib"
 if not _DEFAULT.exists():
     _DEFAULT = _ROOT / "models" / "model_baseline.joblib"
 MODEL_PATH = os.environ.get("MODEL_PATH", str(_DEFAULT))
+_FRONTEND = _ROOT / "frontend" / "fake-news-checker-mockup.html"
 
 app = FastAPI(title="Thai Fake News Detection API", version="1.0.0")
 app.add_middleware(
@@ -33,6 +36,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    """เสิร์ฟหน้าเว็บ demo ให้ทั้งระบบอยู่ URL เดียว: http://localhost:8000"""
+    if not _FRONTEND.exists():
+        raise HTTPException(status_code=404, detail=f"frontend not found: {_FRONTEND}")
+    return FileResponse(_FRONTEND, media_type="text/html")
 
 _pipe = joblib.load(MODEL_PATH)
 

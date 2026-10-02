@@ -42,10 +42,11 @@ py src/download_data.py
 
 ```bash
 # 1. Start backend (from repo root)
-py -m uvicorn src.main:app --host 0.0.0.0 --port 8000
+py -m uvicorn src.main:app --host localhost --port 8000
+#    ข้อความที่ขึ้นบนจอจะคลิกได้: Uvicorn running on http://localhost:8000
 
-# 2. Open the web UI in a browser
-start frontend/fake-news-checker-mockup.html
+# 2. Open the web UI — backend เสิร์ฟหน้าเว็บให้แล้ว ไม่ต้องเปิดไฟล์เอง
+#    เปิด http://localhost:8000 ในเบราว์เซอร์
 
 # 3. Or use the CLI
 py src/predict.py --title "พาดหัวข่าว..." --detail "เนื้อหาข่าว..."
