@@ -20,13 +20,56 @@ from sklearn.metrics import (
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
+try:
+    from predict import preprocess  # running as `python train_baseline.py`
+except ImportError:  # imported as `src.train_baseline` (notebook / other scripts)
+    from src.predict import preprocess
+
 _ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = _ROOT / "data"
 FILES = [DATA_DIR / "train_v1.jsonl", DATA_DIR / "val_v1.jsonl", DATA_DIR / "test_v1.jsonl"]
 LABEL_MAP = {"Fact News": 0, "Fake News": 1}
+# Dataset packaging, not language: "" (padding) and "|||" (title/body separator).
+# "|||" sits in 75.4% of Fact docs but 56.9% of Fake docs, so leaving it in hands the
+# model a class-correlated shortcut that has nothing to do with the text.
+ARTIFACTS = {"", "|||"}
 
 
-def load_soda() -> pd.DataFrame:
+def build_vectorizer() -> TfidfVectorizer:
+    """TF-IDF over text that is ALREADY tokenized.
+
+    token_pattern must be disabled here. The default r"(?u)\\b\\w\\w+\\b" re-splits the
+    input, and Thai combining marks (U+0E31-U+0E4E) are not \\w, so it turns
+    "แพทย์" into "แพทย", splits "พร้อม" into "พร"+"อม", and drops "น้ำ" entirely --
+    the vocabulary fills up with fragments. tokenizer=str.split keeps the
+    segmentation that was handed to us (LimeSoda tokens when training,
+    PyThaiNLP newmm tokens when serving).
+    """
+    return TfidfVectorizer(
+        max_features=10000,
+        ngram_range=(1, 2),
+        tokenizer=str.split,
+        token_pattern=None,
+        lowercase=False,
+    )
+
+
+def load_soda(style: str = "serve") -> pd.DataFrame:
+    """Load the LimeSoda binary Fact/Fake subset.
+
+    style="serve" (default)
+        Feed the text through the same PyThaiNLP newmm step the API uses, so the
+        model is trained on exactly the token distribution it gets served.
+        Re-joining LimeSoda's token list restores the original Thai text (Thai
+        has no inter-word spaces), minus the packaging artifacts.
+    style="dataset"
+        Keep LimeSoda's own token list as the text -- the pre-fix behaviour.
+        Kept so the "train tokens vs serve tokens" comparison stays reproducible
+        (notebook part 7); it is NOT what the shipped model uses.
+    """
+    if style not in ("serve", "dataset"):
+        raise ValueError(f"style must be 'serve' or 'dataset', got {style!r}")
+
     rows = []
     for path in FILES:
         with open(path, encoding="utf-8") as fh:
@@ -35,8 +78,11 @@ def load_soda() -> pd.DataFrame:
                 tag = rec.get("Document Tag")
                 if tag not in LABEL_MAP:
                     continue  # drop Undefined / non-binary
-                # pre-tokenization: join the provided token list with spaces
-                text = " ".join(rec.get("Text") or [])
+                toks = [t for t in (rec.get("Text") or []) if t not in ARTIFACTS]
+                if style == "dataset":
+                    text = " ".join(toks)
+                else:
+                    text = preprocess("".join(toks))
                 rows.append({"text": text, "label": LABEL_MAP[tag]})
     return pd.DataFrame(rows)
 
@@ -53,7 +99,7 @@ def main() -> None:
 
     pipe = Pipeline(
         [
-            ("tfidf", TfidfVectorizer(max_features=10000, ngram_range=(1, 2))),
+            ("tfidf", build_vectorizer()),
             ("clf", LogisticRegression(max_iter=1000, class_weight="balanced")),
         ]
     )
@@ -72,7 +118,7 @@ def main() -> None:
         "dataset": "LimeSoda (binary Fact/Fake only)",
         "n_train": int(len(X_train)),
         "n_test": int(len(X_test)),
-        "model": "TfidfVectorizer(max_features=10000, ngram_range=(1,2)) + LogisticRegression(max_iter=1000, class_weight='balanced')",
+        "model": "PyThaiNLP newmm (train and serve identical) + TfidfVectorizer(max_features=10000, ngram_range=(1,2), tokenizer=str.split, token_pattern=None) + LogisticRegression(max_iter=1000, class_weight='balanced')",
         "accuracy": acc,
         "precision_macro": prec,
         "recall_macro": rec,

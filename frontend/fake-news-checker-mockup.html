@@ -605,7 +605,7 @@
             <p class="news-excerpt" id="r-excerpt"></p>
           </article>
 
-          <p id="offline-badge" class="offline-badge hidden">[Offline Demo Mode]</p>
+          <p id="offline-badge" class="offline-badge hidden">[Offline Demo Mode] ผลตัวอย่าง · ไม่ได้วิเคราะห์สด</p>
 
           <div class="stamp-wrap">
             <div id="stamp" class="stamp" role="status"></div>
@@ -643,7 +643,7 @@
           <button id="again-fb-btn" class="btn-ghost" type="button">ตรวจข่าวอื่นต่อ</button>
         </div>
 
-        <p id="demo-note" class="demo-note hidden">โหมดสาธิต — ผลลัพธ์จากข้อมูลตัวอย่าง ไม่ได้วิเคราะห์ข่าวจริง</p>
+        <p id="demo-note" class="demo-note hidden">โหมดสำรอง — ผลลัพธ์นี้มาจากข้อมูลตัวอย่าง ไม่ได้วิเคราะห์ข่าวจริง (เซิร์ฟเวอร์ไม่ตอบ)</p>
       </section>
     </main>
 
@@ -888,7 +888,9 @@
 
         function finishCheck() {
           hideOffline();
-          demoNote.classList.add("hidden");
+          hideDemoNote();
+          /* ปุ่มตัวอย่างก็ยิงโมเดลจริงเหมือนข้อความที่พิมพ์เอง — ถ้าเซิร์ฟเวอร์ไม่ตอบ
+             จึงค่อยตกไปที่ renderMockResult() ซึ่งขึ้นป้าย [Offline Demo Mode] ให้เห็น */
           callPredict();
         }
 
@@ -940,6 +942,12 @@
           offlineBadge.classList.add("hidden");
           demoNote.classList.add("hidden");
         }
+        function showDemoNote() {
+          demoNote.classList.remove("hidden");
+        }
+        function hideDemoNote() {
+          demoNote.classList.add("hidden");
+        }
 
         function renderLiveResult(res) {
           hideOffline();
@@ -962,7 +970,12 @@
           var showedFallback = false;
           if (currentMode === "text") {
             var r = pickTextResult(headlineInput.value, bodyInput.value);
-            renderResult(r, { text: true, headline: headlineInput.value.trim(), body: bodyInput.value.trim() });
+            renderResult(r, {
+              text: true,
+              headline: headlineInput.value.trim(),
+              body: bodyInput.value.trim(),
+              meta: "ผลตัวอย่างจากโหมดสำรอง · ไม่ได้วิเคราะห์สด",
+            });
           } else {
             var ru = pickUrlResult(urlInput.value);
             if (ru.fetchFail) {
@@ -1079,7 +1092,9 @@
           }
         }
 
-        checkBtn.addEventListener("click", startCheck);
+        checkBtn.addEventListener("click", function () {
+          startCheck();
+        });
 
         [headlineInput, bodyInput, urlInput].filter(Boolean).forEach(function (el) {
           el.addEventListener("input", function () {

@@ -4,12 +4,12 @@ Models: ComplementNB, Calibrated LinearSVC, LogisticRegression (baseline).
 Outputs: benchmark_results.md, evaluation_results.json update, model_best.joblib.
 """
 import json
+import sys
 import time
 from pathlib import Path
 
 import joblib
 from sklearn.calibration import CalibratedClassifierCV
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support
 from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
@@ -17,7 +17,7 @@ from sklearn.naive_bayes import ComplementNB
 from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 
-from train_baseline import load_soda
+from train_baseline import build_vectorizer, load_soda
 
 MODELS = {
     "ComplementNB": ComplementNB(),
@@ -29,13 +29,20 @@ MODELS = {
 def build_pipe(clf) -> Pipeline:
     return Pipeline(
         [
-            ("tfidf", TfidfVectorizer(max_features=10000, ngram_range=(1, 2))),
+            ("tfidf", build_vectorizer()),
             ("clf", clf),
         ]
     )
 
 
 def main() -> None:
+    # A Thai Windows console defaults to cp874, which cannot encode "±" in the summary
+    # table below -- the script used to die at the final print() AFTER writing all the
+    # artifacts. Degrade unencodable characters instead of crashing.
+    reconfigure = getattr(sys.stdout, "reconfigure", None)
+    if reconfigure is not None:
+        reconfigure(errors="replace")
+
     df = load_soda()
     X_train, X_test, y_train, y_test = train_test_split(
         df["text"], df["label"], test_size=0.2, random_state=42, stratify=df["label"]

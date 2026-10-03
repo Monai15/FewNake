@@ -3,18 +3,21 @@
 Classify Thai health news as **Fact** or **Fake** using classical ML, served through a FastAPI backend with a single-file web UI. Built as an AI/ML mini-project (240-318).
 
 - **Data:** [LimeSoda](https://github.com/byinth/LimeSoda) Thai health-news corpus (binary subset: 3,436 docs, Fact 1,558 / Fake 1,878)
-- **Best model:** Calibrated LinearSVC + TF-IDF — test macro F1 **0.887**, accuracy 0.888, 0.31 ms/sample
+- **Best model:** Calibrated LinearSVC + TF-IDF — test macro F1 **0.894**, accuracy 0.895, 0.31 ms/sample.
+  Training and serving feed the model the *same* PyThaiNLP `newmm` text, so this is also the
+  number the live demo produces (100% prediction agreement between the two paths).
 - **UI:** paper/ink styled single-file HTML (works on projector + mobile)
 
 ## Pipeline
 
 ```
 Raw Thai text (title + detail)
-   → PyThaiNLP word_tokenize (newmm, pre-tokenized)
-   → TF-IDF (max_features=10000, ngram 1–2)
+   → PyThaiNLP word_tokenize (newmm)  ← same step at training time and at serving time
+   → TF-IDF (max_features=10000, ngram 1–2, tokenizer=str.split — input is already segmented)
    → classifier (ComplementNB / LogisticRegression / LinearSVC)
    → FastAPI POST /api/predict  (CORS *)
-   → Web UI, 3s timeout → offline fallback with [Offline Demo Mode] badge
+   → Web UI: every check — preset buttons and typed text alike — goes live through the API;
+     3s timeout → offline fallback to a fixture, badged [Offline Demo Mode] + a written notice
 ```
 
 ## Layout
@@ -70,14 +73,38 @@ py src/pick_demo_examples.py
 
 | Model                         | 5-fold CV Macro F1  | Test Acc   | Test Macro F1 | Latency (ms/sample) |
 | ----------------------------- | ------------------- | ---------- | ------------- | ------------------- |
-| ComplementNB                  | 0.8775 ± 0.0120     | 0.8503     | 0.8479        | 0.42                |
-| LogisticRegression (baseline) | 0.8957 ± 0.0155     | 0.8735     | 0.8721        | 0.32                |
-| **LinearSVC (calibrated)** ⭐ | **0.9032 ± 0.0140** | **0.8881** | **0.8868**    | **0.31**            |
+| ComplementNB                  | 0.8809 ± 0.0083     | 0.8576     | 0.8557        | 0.29                |
+| LogisticRegression (baseline) | 0.8987 ± 0.0084     | 0.8823     | 0.8810        | 0.29                |
+| **LinearSVC (calibrated)** ⭐ | **0.9026 ± 0.0111** | **0.8953** | **0.8941**    | **0.31**            |
+
+Every number above is produced on the same `newmm` text the API serves, so the reported score
+is the live system's score. For reference, the pre-fix pipeline (trained on LimeSoda's own
+token list, default `token_pattern`, then served `newmm` text) measured **0.8696** macro F1 on
+the identical test split — the fix is worth **+3.3 macro F1 points** on the served system.
 
 Full details: `results/benchmark_results.md`, `results/evaluation_results.json`.
 
 ## Notes
 
 - Binary classification (Fact/Fake only); `Undefined`-labeled docs in LimeSoda are excluded.
+- Text is tokenized with PyThaiNLP `newmm` **both** when training and when serving; the model
+  never sees a token distribution at training time that differs from the one at inference.
+- The TF-IDF vectorizer runs with `tokenizer=str.split, token_pattern=None`: the input is
+  already tokenized, and sklearn's default `token_pattern` would re-split on every Thai
+  combining mark (`แพทย์` → `แพทย`, `พร้อม` → `พร`+`อม`, `น้ำ` → dropped).
+- Dataset packaging tokens (`""` padding and the `|||` title/body separator) are stripped in
+  `load_soda()`; `|||` alone appears in 75% of Fact vs 57% of Fake docs, so leaving it in
+  gives the model a class-correlated shortcut.
+- UI preset buttons **and** typed text both go through the live API: a preset sends its own text
+  to the model (the moringa example answers Fake 0.77). Nothing is served from a fixture while
+  the server is up. If a request fails, the UI falls back to a fixture and says so out loud —
+  `[Offline Demo Mode] ผลตัวอย่าง · ไม่ได้วิเคราะห์สด` plus the note *"โหมดสำรอง — ผลลัพธ์นี้มา
+  จากข้อมูลตัวอย่าง ไม่ได้วิเคราะห์ข่าวจริง"*, and the meta line under the headline reads
+  `ผลตัวอย่างจากโหมดสำรอง · ไม่ได้วิเคราะห์สด`. Live answers show `โมเดล model_best.joblib · API … ms`.
+- Per-request latency shown by the UI is single-request (4–7 ms); the benchmark's
+  ms/sample figures measure bulk prediction (0.29–0.52 ms across 688 docs).
+- Retrain with `train_baseline.py` → `benchmark.py` → `pick_demo_examples.py` in that order;
+  pinned env is the `fewnake-310` kernel (Python 3.10 / scikit-learn 1.7.2) used by the
+  notebook — pickles warn when loaded by a different scikit-learn version.
 - Transformer route (WangchanBERTa) left as future work — CPU-first scope.
 - Dataset © [byinth/LimeSoda](https://github.com/byinth/LimeSoda); see its license for data usage.

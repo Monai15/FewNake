@@ -38,7 +38,9 @@ def main() -> None:
     out = []
     for label, key in ((0, "Fact"), (1, "Fake")):
         for conf, idx, text in sorted(picks[label], reverse=True)[:N_PER_CLASS]:
-            words = word_tokenize(text, engine="newmm")
+            # newmm returns the inter-token spaces as their own tokens; drop them so the
+            # headline reads like Thai text instead of "คำ เว้น คำ"
+            words = [w for w in word_tokenize(text, engine="newmm") if w.strip()]
             title = "".join(words[:TITLE_WORDS]) + ("…" if len(words) > TITLE_WORDS else "")
             out.append(
                 {
