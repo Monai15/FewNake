@@ -73,8 +73,8 @@ py src/pick_demo_examples.py
 
 | Model                         | 5-fold CV Macro F1  | Test Acc   | Test Macro F1 | Latency (ms/sample) |
 | ----------------------------- | ------------------- | ---------- | ------------- | ------------------- |
-| ComplementNB                  | 0.8754 ± 0.0086     | 0.8895     | 0.8884        | 0.38                |
-| LogisticRegression (baseline) | 0.8960 ± 0.0084     | 0.9026     | 0.9018        | 0.35                |
+| ComplementNB                  | 0.8754 ± 0.0086     | 0.8895     | 0.8884        | 0.33                |
+| LogisticRegression (baseline) | 0.8960 ± 0.0084     | 0.9026     | 0.9018        | 0.38                |
 | **LinearSVC (calibrated)** ⭐ | **0.9021 ± 0.0081** | **0.9041** | **0.9029**    | **0.34**            |
 
 Every number above is produced on the same `newmm` text the API serves, so the reported score
@@ -104,7 +104,8 @@ Full details: `results/benchmark_results.md`, `results/evaluation_results.json`.
   จากข้อมูลตัวอย่าง ไม่ได้วิเคราะห์ข่าวจริง"*, and the meta line under the headline reads
   `ผลตัวอย่างจากโหมดสำรอง · ไม่ได้วิเคราะห์สด`. Live answers show `โมเดล model_best.joblib · API … ms`.
 - Per-request latency shown by the UI is single-request (4–7 ms); the benchmark's
-  ms/sample figures measure bulk prediction (0.34–0.54 ms across 688 docs).
+  ms/sample figures measure bulk prediction (0.33–0.38 ms for the three shipped models; 0.33–0.54 ms
+  across every model measured in the audit run) and vary ~±0.05 ms between runs.
 - Retrain with `train_baseline.py` → `benchmark.py` → `pick_demo_examples.py` in that order;
   pinned env is the `fewnake-310` kernel (Python 3.10 / scikit-learn 1.7.2) used by the
   notebook — pickles warn when loaded by a different scikit-learn version.

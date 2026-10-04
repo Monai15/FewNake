@@ -28,8 +28,8 @@
       "test_precision_macro": 0.8889268626110731,
       "test_recall_macro": 0.888025095471904,
       "test_f1_macro": 0.8884451271548046,
-      "latency_ms_per_sample": 0.5499689384948376,
-      "train_time_sec": 2.654844284057617
+      "latency_ms_per_sample": 0.33167559047077977,
+      "train_time_sec": 2.3760476112365723
     },
     {
       "model": "LinearSVC (calibrated)",
@@ -39,8 +39,8 @@
       "test_precision_macro": 0.9044195861784992,
       "test_recall_macro": 0.9018685215493726,
       "test_f1_macro": 0.9029469850470646,
-      "latency_ms_per_sample": 0.38107501906017927,
-      "train_time_sec": 2.8724472522735596
+      "latency_ms_per_sample": 0.3424127434575281,
+      "train_time_sec": 2.2884342670440674
     },
     {
       "model": "LogisticRegression (baseline)",
@@ -50,8 +50,8 @@
       "test_precision_macro": 0.9016869009584665,
       "test_recall_macro": 0.9019026186579377,
       "test_f1_macro": 0.9017928095872171,
-      "latency_ms_per_sample": 0.3724940294443175,
-      "train_time_sec": 3.0484402179718018
+      "latency_ms_per_sample": 0.37781409052915355,
+      "train_time_sec": 2.7273499965667725
     }
   ],
   "best_model": "LinearSVC (calibrated)"
