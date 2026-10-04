@@ -1,6 +1,6 @@
 """Phase 5: pick 4 deterministic live-demo examples (2 Fact, 2 Fake).
 
-Reuses the exact train/test split (random_state=42). Chooses correctly-predicted
+Reuses the exact train/test split (random_state=343). Chooses correctly-predicted
 test docs with highest confidence from each class, titles truncated from the text.
 Writes demo_examples.json.
 """
@@ -21,7 +21,7 @@ TITLE_WORDS = 12
 def main() -> None:
     df = load_soda()
     _, X_test, _, y_test = train_test_split(
-        df["text"], df["label"], test_size=0.2, random_state=42, stratify=df["label"]
+        df["text"], df["label"], test_size=0.2, random_state=343, stratify=df["label"]
     )
     pipe = joblib.load(_ROOT / "models" / "model_best.joblib")
     proba = pipe.predict_proba(X_test)

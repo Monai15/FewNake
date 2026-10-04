@@ -45,10 +45,10 @@ def main() -> None:
 
     df = load_soda()
     X_train, X_test, y_train, y_test = train_test_split(
-        df["text"], df["label"], test_size=0.2, random_state=42, stratify=df["label"]
+        df["text"], df["label"], test_size=0.2, random_state=343, stratify=df["label"]
     )
 
-    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=343)
     rows = []
     best = None
     best_f1 = -1.0

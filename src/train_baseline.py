@@ -1,6 +1,6 @@
 """Phase 1: Load LimeSoda -> pre-tokenized text -> TF-IDF + LogisticRegression baseline.
 
-Filter to binary Fact/Fake only. Stratified 80/20 split (random_state=42).
+Filter to binary Fact/Fake only. Stratified 80/20 split (random_state=343).
 Saves evaluation_results.json and model_baseline.joblib.
 """
 import json
@@ -93,7 +93,7 @@ def main() -> None:
     print(f"loaded {len(df)} binary rows (Fact={int((df.label==0).sum())}, Fake={int((df.label==1).sum())})")
 
     X_train, X_test, y_train, y_test = train_test_split(
-        df["text"], df["label"], test_size=0.2, random_state=42, stratify=df["label"]
+        df["text"], df["label"], test_size=0.2, random_state=343, stratify=df["label"]
     )
     print(f"split -> train {len(X_train)} / test {len(X_test)}")
 

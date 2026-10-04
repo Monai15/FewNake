@@ -7,7 +7,7 @@ Fake health news spreads fast on Thai social media and misleads public decisions
 **LimeSoda** (byinth/LimeSoda) — Thai health-news corpus.
 - Total docs: 5,763 (train 2,698 / val 300 / test 2,765)
 - Binary subset (Fact + Fake only): **3,436 docs** (Fact 1,558 / Fake 1,878); `Undefined` dropped per binary scope
-- Stratified split: **80% train / 20% test**, `random_state=42`
+- Stratified split: **80% train / 20% test**, `random_state=343` (3 last digits of the student ID — same seed in `src/*.py` and the notebook)
 
 ## System Architecture
 ```
@@ -33,9 +33,9 @@ FastAPI POST /api/predict  ── CORS ──►  Single-file web UI (paper/ink 
 ## Model Comparison (same train/test split)
 | Model | 5-fold CV Macro F1 | Test Acc | Test Macro F1 | Latency (ms/sample) |
 |---|---|---|---|---|
-| ComplementNB | 0.8809 ± 0.0083 | 0.8576 | 0.8557 | 0.29 |
-| LogisticRegression (baseline) | 0.8987 ± 0.0084 | 0.8823 | 0.8810 | 0.29 |
-| **LinearSVC (calibrated)** ⭐ | **0.9026 ± 0.0111** | **0.8953** | **0.8941** | **0.31** |
+| ComplementNB | 0.8754 ± 0.0086 | 0.8895 | 0.8884 | 0.38 |
+| LogisticRegression (baseline) | 0.8960 ± 0.0084 | 0.9026 | 0.9018 | 0.35 |
+| **LinearSVC (calibrated)** ⭐ | **0.9021 ± 0.0081** | **0.9041** | **0.9029** | **0.34** |
 
 ⭐ Best model (`model_best.joblib`) served by the API by default. Mapping to the LimeSoda paper's
 classical baselines: LinearSVC here is the strongest of the three, and Macro F1 ≈ 0.89 is in the
@@ -45,19 +45,21 @@ future work per the CPU-first scope.
 Training and serving use **the same PyThaiNLP `newmm` text** (`load_soda()` tokenizes with newmm,
 the API tokenizes with newmm), so the number on the slide is the number the live system produces —
 verified with 100% prediction agreement and 0 label flips across the 688 test docs. The pre-fix
-pipeline scored 0.8696 macro F1 on the same test split: the fix is worth **+3.3 points**.
+pipeline (LimeSoda token list + default `token_pattern`) scored 0.8696 macro F1 on the same test
+split: the fix is worth **+3.3 points**. `notebooks/learning_evidence.ipynb` (SEED = 343)
+reproduces the served model's 0.9041 / 0.9029 exactly.
 
 ## Live Demo Examples (deterministic, `demo_examples.json`)
 | # | Headline | Verdict | Confidence |
 |---|---|---|---|
-| 1 | ไทยพบผู้ติดเชื้อไวรัสโควิดเพิ่มอีก3รายเตรียมคาดโทษ… | Fact | 100.0% |
-| 2 | นายกฯวอนประชาชนร่วมมือต่อสู้โควิด-19ย้ำประเทศไทยต้อง… | Fact | 100.0% |
-| 3 | เราขายชานมไข่มุกมีลูกค้ามาบอกเหมือนกันว่าเค้า… | Fake | 99.9% |
-| 4 | นมต้มกระเทียมดื่มทุกวันประโยชน์เยอะมากๆนมต้มกระเทียมดื่ม… | Fake | 99.8% |
+| 1 | อากาศร้อนอาหารบูดเสียง่ายแนะ!!รับประทานอาหาร“สุก… | Fact | 100.0% |
+| 2 | สธ.เตรียมพร้อมรับคนไทย161คนกลับจากอู่ฮั่นพรุ่งนี้… | Fact | 99.9% |
+| 3 | 5สูตรสมุนไพร..รักษาเก๊าท์ล้างกรดยูริก!!… | Fake | 99.9% |
+| 4 | ใบทุเรียนเทศแห้งเอามาต้มกินมะเร็งหายค่ะตอนนี้ดัง… | Fake | 99.9% |
 
 ## Demo behaviour (what the UI does)
 - **Preset buttons** (📝 ตัวอย่าง) and **text the presenter types** both go through the live API —
-  a preset simply fills the two inputs and submits them. Answering the moringa preset = Fake 0.77
+  a preset simply fills the two inputs and submits them. Answering the moringa preset = Fake 0.755
   from `model_best.joblib`, and the meta line under the headline reads `โมเดล model_best.joblib · API … ms`.
 - If a request fails (server down / dropped), a 3-second timeout falls back to a fixture chosen
   deterministically from the text, and the UI states it plainly: badge

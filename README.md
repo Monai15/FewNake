@@ -3,7 +3,7 @@
 Classify Thai health news as **Fact** or **Fake** using classical ML, served through a FastAPI backend with a single-file web UI. Built as an AI/ML mini-project (240-318).
 
 - **Data:** [LimeSoda](https://github.com/byinth/LimeSoda) Thai health-news corpus (binary subset: 3,436 docs, Fact 1,558 / Fake 1,878)
-- **Best model:** Calibrated LinearSVC + TF-IDF — test macro F1 **0.894**, accuracy 0.895, 0.31 ms/sample.
+- **Best model:** Calibrated LinearSVC + TF-IDF — test macro F1 **0.903**, accuracy 0.904, 0.34 ms/sample (seed 343).
   Training and serving feed the model the *same* PyThaiNLP `newmm` text, so this is also the
   number the live demo produces (100% prediction agreement between the two paths).
 - **UI:** paper/ink styled single-file HTML (works on projector + mobile)
@@ -73,14 +73,16 @@ py src/pick_demo_examples.py
 
 | Model                         | 5-fold CV Macro F1  | Test Acc   | Test Macro F1 | Latency (ms/sample) |
 | ----------------------------- | ------------------- | ---------- | ------------- | ------------------- |
-| ComplementNB                  | 0.8809 ± 0.0083     | 0.8576     | 0.8557        | 0.29                |
-| LogisticRegression (baseline) | 0.8987 ± 0.0084     | 0.8823     | 0.8810        | 0.29                |
-| **LinearSVC (calibrated)** ⭐ | **0.9026 ± 0.0111** | **0.8953** | **0.8941**    | **0.31**            |
+| ComplementNB                  | 0.8754 ± 0.0086     | 0.8895     | 0.8884        | 0.38                |
+| LogisticRegression (baseline) | 0.8960 ± 0.0084     | 0.9026     | 0.9018        | 0.35                |
+| **LinearSVC (calibrated)** ⭐ | **0.9021 ± 0.0081** | **0.9041** | **0.9029**    | **0.34**            |
 
 Every number above is produced on the same `newmm` text the API serves, so the reported score
-is the live system's score. For reference, the pre-fix pipeline (trained on LimeSoda's own
-token list, default `token_pattern`, then served `newmm` text) measured **0.8696** macro F1 on
-the identical test split — the fix is worth **+3.3 macro F1 points** on the served system.
+is the live system's score. The train/test split uses `random_state=343` (3 last digits of the
+student ID) everywhere, so `notebooks/learning_evidence.ipynb` reproduces these numbers exactly.
+For reference, the pre-fix pipeline (trained on LimeSoda's own token list, default
+`token_pattern`, then served `newmm` text) measured **0.8696** macro F1 on the identical test
+split — the fix is worth **+3.3 macro F1 points** on the served system.
 
 Full details: `results/benchmark_results.md`, `results/evaluation_results.json`.
 
@@ -102,7 +104,7 @@ Full details: `results/benchmark_results.md`, `results/evaluation_results.json`.
   จากข้อมูลตัวอย่าง ไม่ได้วิเคราะห์ข่าวจริง"*, and the meta line under the headline reads
   `ผลตัวอย่างจากโหมดสำรอง · ไม่ได้วิเคราะห์สด`. Live answers show `โมเดล model_best.joblib · API … ms`.
 - Per-request latency shown by the UI is single-request (4–7 ms); the benchmark's
-  ms/sample figures measure bulk prediction (0.29–0.52 ms across 688 docs).
+  ms/sample figures measure bulk prediction (0.34–0.54 ms across 688 docs).
 - Retrain with `train_baseline.py` → `benchmark.py` → `pick_demo_examples.py` in that order;
   pinned env is the `fewnake-310` kernel (Python 3.10 / scikit-learn 1.7.2) used by the
   notebook — pickles warn when loaded by a different scikit-learn version.

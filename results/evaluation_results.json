@@ -3,55 +3,55 @@
   "n_train": 2748,
   "n_test": 688,
   "model": "PyThaiNLP newmm (train and serve identical) + TfidfVectorizer(max_features=10000, ngram_range=(1,2), tokenizer=str.split, token_pattern=None) + LogisticRegression(max_iter=1000, class_weight='balanced')",
-  "accuracy": 0.8822674418604651,
-  "precision_macro": 0.8819030090313744,
-  "recall_macro": 0.880285051827605,
-  "f1_macro": 0.8810001217160683,
+  "accuracy": 0.9026162790697675,
+  "precision_macro": 0.9016869009584665,
+  "recall_macro": 0.9019026186579377,
+  "f1_macro": 0.9017928095872171,
   "confusion_matrix": [
     [
-      268,
-      44
+      279,
+      33
     ],
     [
-      37,
-      339
+      34,
+      342
     ]
   ],
-  "train_time_sec": 13.597996234893799,
-  "predict_latency_ms_per_sample": 19.756964472837225,
+  "train_time_sec": 18.601404428482056,
+  "predict_latency_ms_per_sample": 27.026532001273576,
   "models": [
     {
       "model": "ComplementNB",
-      "cv_f1_macro_mean": 0.8808541195794846,
-      "cv_f1_macro_std": 0.00834184840204246,
-      "test_accuracy": 0.8575581395348837,
-      "test_precision_macro": 0.85773532954741,
-      "test_recall_macro": 0.854405346426623,
-      "test_f1_macro": 0.8557034627402302,
-      "latency_ms_per_sample": 0.2896044143410616,
-      "train_time_sec": 1.9782958030700684
+      "cv_f1_macro_mean": 0.8753673063283764,
+      "cv_f1_macro_std": 0.008620989906915665,
+      "test_accuracy": 0.8895348837209303,
+      "test_precision_macro": 0.8889268626110731,
+      "test_recall_macro": 0.888025095471904,
+      "test_f1_macro": 0.8884451271548046,
+      "latency_ms_per_sample": 0.5499689384948376,
+      "train_time_sec": 2.654844284057617
     },
     {
       "model": "LinearSVC (calibrated)",
-      "cv_f1_macro_mean": 0.9025699207974262,
-      "cv_f1_macro_std": 0.011141103373848249,
-      "test_accuracy": 0.8953488372093024,
-      "test_precision_macro": 0.8955666883985862,
-      "test_recall_macro": 0.8930714675395526,
-      "test_f1_macro": 0.8941239836877067,
-      "latency_ms_per_sample": 0.3066929273827131,
-      "train_time_sec": 2.0549535751342773
+      "cv_f1_macro_mean": 0.9021137065476006,
+      "cv_f1_macro_std": 0.0081255699120018,
+      "test_accuracy": 0.9040697674418605,
+      "test_precision_macro": 0.9044195861784992,
+      "test_recall_macro": 0.9018685215493726,
+      "test_f1_macro": 0.9029469850470646,
+      "latency_ms_per_sample": 0.38107501906017927,
+      "train_time_sec": 2.8724472522735596
     },
     {
       "model": "LogisticRegression (baseline)",
-      "cv_f1_macro_mean": 0.8986785643371089,
-      "cv_f1_macro_std": 0.008350317094013116,
-      "test_accuracy": 0.8822674418604651,
-      "test_precision_macro": 0.8819030090313744,
-      "test_recall_macro": 0.880285051827605,
-      "test_f1_macro": 0.8810001217160683,
-      "latency_ms_per_sample": 0.2871859212254369,
-      "train_time_sec": 1.843837022781372
+      "cv_f1_macro_mean": 0.8959675392558568,
+      "cv_f1_macro_std": 0.008449928471513095,
+      "test_accuracy": 0.9026162790697675,
+      "test_precision_macro": 0.9016869009584665,
+      "test_recall_macro": 0.9019026186579377,
+      "test_f1_macro": 0.9017928095872171,
+      "latency_ms_per_sample": 0.3724940294443175,
+      "train_time_sec": 3.0484402179718018
     }
   ],
   "best_model": "LinearSVC (calibrated)"
