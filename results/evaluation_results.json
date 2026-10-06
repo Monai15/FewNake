@@ -21,6 +21,17 @@
   "predict_latency_ms_per_sample": 27.026532001273576,
   "models": [
     {
+      "model": "Dummy (majority)",
+      "cv_f1_macro_mean": 0.35341160252369164,
+      "cv_f1_macro_std": 0.0002812118802779551,
+      "test_accuracy": 0.5465116279069767,
+      "test_precision_macro": 0.27325581395348836,
+      "test_recall_macro": 0.5,
+      "test_f1_macro": 0.3533834586466165,
+      "latency_ms_per_sample": 0.23587949054185733,
+      "train_time_sec": 1.8896260261535645
+    },
+    {
       "model": "ComplementNB",
       "cv_f1_macro_mean": 0.8753673063283764,
       "cv_f1_macro_std": 0.008620989906915665,
@@ -28,31 +39,53 @@
       "test_precision_macro": 0.8889268626110731,
       "test_recall_macro": 0.888025095471904,
       "test_f1_macro": 0.8884451271548046,
-      "latency_ms_per_sample": 0.33167559047077977,
-      "train_time_sec": 2.3760476112365723
+      "latency_ms_per_sample": 0.2759182175924612,
+      "train_time_sec": 1.706191062927246
     },
     {
-      "model": "LinearSVC (calibrated)",
-      "cv_f1_macro_mean": 0.9021137065476006,
-      "cv_f1_macro_std": 0.0081255699120018,
-      "test_accuracy": 0.9040697674418605,
-      "test_precision_macro": 0.9044195861784992,
-      "test_recall_macro": 0.9018685215493726,
-      "test_f1_macro": 0.9029469850470646,
-      "latency_ms_per_sample": 0.3424127434575281,
-      "train_time_sec": 2.2884342670440674
-    },
-    {
-      "model": "LogisticRegression (baseline)",
+      "model": "LogisticRegression",
       "cv_f1_macro_mean": 0.8959675392558568,
       "cv_f1_macro_std": 0.008449928471513095,
       "test_accuracy": 0.9026162790697675,
       "test_precision_macro": 0.9016869009584665,
       "test_recall_macro": 0.9019026186579377,
       "test_f1_macro": 0.9017928095872171,
-      "latency_ms_per_sample": 0.37781409052915355,
-      "train_time_sec": 2.7273499965667725
+      "latency_ms_per_sample": 0.258179598076399,
+      "train_time_sec": 1.848219394683838
+    },
+    {
+      "model": "DecisionTree",
+      "cv_f1_macro_mean": 0.7919444379878359,
+      "cv_f1_macro_std": 0.005239709948993116,
+      "test_accuracy": 0.8125,
+      "test_precision_macro": 0.8124724586339482,
+      "test_recall_macro": 0.8082719585379159,
+      "test_f1_macro": 0.809730842203428,
+      "latency_ms_per_sample": 0.25413618531338006,
+      "train_time_sec": 3.664904832839966
+    },
+    {
+      "model": "RandomForest (200)",
+      "cv_f1_macro_mean": 0.8873035232567927,
+      "cv_f1_macro_std": 0.006978121679654212,
+      "test_accuracy": 0.8909883720930233,
+      "test_precision_macro": 0.8923232845991288,
+      "test_recall_macro": 0.8877182214948172,
+      "test_f1_macro": 0.8894561284365541,
+      "latency_ms_per_sample": 0.3989983436673186,
+      "train_time_sec": 2.456320285797119
+    },
+    {
+      "model": "KNN (k=5, cosine)",
+      "cv_f1_macro_mean": 0.8578778108259304,
+      "cv_f1_macro_std": 0.02039123609134332,
+      "test_accuracy": 0.8473837209302325,
+      "test_precision_macro": 0.8469915097822074,
+      "test_recall_macro": 0.844551282051282,
+      "test_f1_macro": 0.8455482886091863,
+      "latency_ms_per_sample": 0.3896657117577486,
+      "train_time_sec": 1.8308594226837158
     }
   ],
-  "best_model": "LinearSVC (calibrated)"
+  "best_model": "LogisticRegression"
 }

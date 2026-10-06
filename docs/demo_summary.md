@@ -20,7 +20,7 @@ PyThaiNLP word_tokenize (engine='newmm')   ← the SAME step at training time an
 TF-IDF vectorizer (max_features=10000, ngram 1–2, tokenizer=str.split, token_pattern=None)
         │
         ▼
-Classifier model (LogisticRegression / ComplementNB / LinearSVC)
+Classifier model (LogisticRegression served; ComplementNB / DecisionTree / RandomForest / KNN benchmarked)
         │
         ▼
 FastAPI POST /api/predict  ── CORS ──►  Single-file web UI (paper/ink design)
@@ -33,29 +33,32 @@ FastAPI POST /api/predict  ── CORS ──►  Single-file web UI (paper/ink 
 ## Model Comparison (same train/test split)
 | Model | 5-fold CV Macro F1 | Test Acc | Test Macro F1 | Latency (ms/sample) |
 |---|---|---|---|---|
-| ComplementNB | 0.8754 ± 0.0086 | 0.8895 | 0.8884 | 0.33 |
-| LogisticRegression (baseline) | 0.8960 ± 0.0084 | 0.9026 | 0.9018 | 0.38 |
-| **LinearSVC (calibrated)** ⭐ | **0.9021 ± 0.0081** | **0.9041** | **0.9029** | **0.34** |
+| Dummy (majority = Fake) | 0.3534 ± 0.0003 | 0.5465 | 0.3534 | 0.24 |
+| KNN (k=5, cosine) | 0.8579 ± 0.0204 | 0.8474 | 0.8455 | 0.39 |
+| DecisionTree | 0.7919 ± 0.0052 | 0.8125 | 0.8097 | 0.25 |
+| ComplementNB | 0.8754 ± 0.0086 | 0.8895 | 0.8884 | 0.28 |
+| RandomForest (200 trees) | 0.8873 ± 0.0070 | 0.8910 | 0.8895 | 0.40 |
+| **LogisticRegression** ⭐ | **0.8960 ± 0.0084** | **0.9026** | **0.9018** | **0.26** |
 
 ⭐ Best model (`model_best.joblib`) served by the API by default. Mapping to the LimeSoda paper's
-classical baselines: LinearSVC here is the strongest of the three, and Macro F1 ≈ 0.89 is in the
+classical baselines: LogisticRegression is the strongest of the course models tried, and Macro F1 ≈ 0.90 is in the
 same band as the paper's classical results; the transformer route (WangchanBERTa) is left as
 future work per the CPU-first scope.
 
 Training and serving use **the same PyThaiNLP `newmm` text** (`load_soda()` tokenizes with newmm,
 the API tokenizes with newmm), so the number on the slide is the number the live system produces —
 verified with 100% prediction agreement and 0 label flips across the 688 test docs. The pre-fix
-pipeline (LimeSoda token list + default `token_pattern`) scored 0.8696 macro F1 on the same test
-split: the fix is worth **+3.3 points**. `notebooks/learning_evidence.ipynb` (SEED = 343)
-reproduces the served model's 0.9041 / 0.9029 exactly.
+pipeline (LimeSoda token list + default `token_pattern`) scored 0.8743 macro F1 on the same test
+split: the fix is worth **+2.7 points**. `notebooks/learning_evidence.ipynb` (SEED = 343)
+reproduces the served model's 0.9026 / 0.9018 exactly.
 
 ## Live Demo Examples (deterministic, `demo_examples.json`)
 | # | Headline | Verdict | Confidence |
 |---|---|---|---|
-| 1 | อากาศร้อนอาหารบูดเสียง่ายแนะ!!รับประทานอาหาร“สุก… | Fact | 100.0% |
-| 2 | สธ.เตรียมพร้อมรับคนไทย161คนกลับจากอู่ฮั่นพรุ่งนี้… | Fact | 99.9% |
-| 3 | 5สูตรสมุนไพร..รักษาเก๊าท์ล้างกรดยูริก!!… | Fake | 99.9% |
-| 4 | ใบทุเรียนเทศแห้งเอามาต้มกินมะเร็งหายค่ะตอนนี้ดัง… | Fake | 99.9% |
+| 1 | คณะรัฐมนตรีมีมติเพิ่มมาตรการรับมือโควิด-19วันนี้… | Fact | 99.1% |
+| 2 | สธ.เผยคนขับแท็กซี่ติดเชื้อไวรัสโคโรนาในไทย… | Fact | 98.8% |
+| 3 | ใบทุเรียนเทศแห้งเอามาต้มกินมะเร็งหายค่ะตอนนี้ดัง… | Fake | 98.4% |
+| 4 | 5สูตรสมุนไพร..รักษาเก๊าท์ล้างกรดยูริก!!… | Fake | 98.4% |
 
 ## Demo behaviour (what the UI does)
 - **Preset buttons** (📝 ตัวอย่าง) and **text the presenter types** both go through the live API —

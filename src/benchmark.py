@@ -1,6 +1,7 @@
 """Phase 4: Multi-model benchmark on the same train/test split.
 
-Models: ComplementNB, Calibrated LinearSVC, LogisticRegression (baseline).
+Models (all from the course): Dummy, ComplementNB, LogisticRegression, DecisionTree,
+RandomForest, KNN. The best by test macro F1 is saved as model_best.joblib.
 Outputs: benchmark_results.md, evaluation_results.json update, model_best.joblib.
 """
 import json
@@ -9,20 +10,26 @@ import time
 from pathlib import Path
 
 import joblib
-from sklearn.calibration import CalibratedClassifierCV
+from sklearn.dummy import DummyClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support
 from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
 from sklearn.naive_bayes import ComplementNB
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
-from sklearn.svm import LinearSVC
+from sklearn.tree import DecisionTreeClassifier
 
 from train_baseline import build_vectorizer, load_soda
 
+SEED = 343
 MODELS = {
+    "Dummy (majority)": DummyClassifier(strategy="most_frequent"),
     "ComplementNB": ComplementNB(),
-    "LinearSVC (calibrated)": CalibratedClassifierCV(LinearSVC(max_iter=2000), cv=3),
-    "LogisticRegression (baseline)": LogisticRegression(max_iter=1000, class_weight="balanced"),
+    "LogisticRegression": LogisticRegression(max_iter=1000, class_weight="balanced"),
+    "DecisionTree": DecisionTreeClassifier(random_state=SEED),
+    "RandomForest (200)": RandomForestClassifier(n_estimators=200, random_state=SEED, n_jobs=-1),
+    "KNN (k=5, cosine)": KNeighborsClassifier(n_neighbors=5, metric="cosine", n_jobs=-1),
 }
 
 
@@ -83,7 +90,7 @@ def main() -> None:
             }
         )
         print(f"{name}: cv_f1={cv_scores.mean():.4f} acc={acc:.4f} f1={f1:.4f} lat={latency_ms:.2f}ms")
-        if f1 > best_f1:
+        if name != "Dummy (majority)" and f1 > best_f1:
             best_f1 = f1
             best = (name, pipe)
 

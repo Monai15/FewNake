@@ -3,7 +3,7 @@
 Classify Thai health news as **Fact** or **Fake** using classical ML, served through a FastAPI backend with a single-file web UI. Built as an AI/ML mini-project (240-318).
 
 - **Data:** [LimeSoda](https://github.com/byinth/LimeSoda) Thai health-news corpus (binary subset: 3,436 docs, Fact 1,558 / Fake 1,878)
-- **Best model:** Calibrated LinearSVC + TF-IDF — test macro F1 **0.903**, accuracy 0.904, 0.34 ms/sample (seed 343).
+- **Best model:** TF-IDF + LogisticRegression — test macro F1 **0.902**, accuracy 0.903, ~0.3 ms/sample (seed 343).
   Training and serving feed the model the *same* PyThaiNLP `newmm` text, so this is also the
   number the live demo produces (100% prediction agreement between the two paths).
 - **UI:** paper/ink styled single-file HTML (works on projector + mobile)
@@ -14,7 +14,7 @@ Classify Thai health news as **Fact** or **Fake** using classical ML, served thr
 Raw Thai text (title + detail)
    → PyThaiNLP word_tokenize (newmm)  ← same step at training time and at serving time
    → TF-IDF (max_features=10000, ngram 1–2, tokenizer=str.split — input is already segmented)
-   → classifier (ComplementNB / LogisticRegression / LinearSVC)
+   → classifier (LogisticRegression is served; ComplementNB / DecisionTree / RandomForest / KNN are benchmarked)
    → FastAPI POST /api/predict  (CORS *)
    → Web UI: every check — preset buttons and typed text alike — goes live through the API;
      3s timeout → offline fallback to a fixture, badged [Offline Demo Mode] + a written notice
@@ -71,18 +71,21 @@ py src/pick_demo_examples.py
 
 ## Results
 
-| Model                         | 5-fold CV Macro F1  | Test Acc   | Test Macro F1 | Latency (ms/sample) |
-| ----------------------------- | ------------------- | ---------- | ------------- | ------------------- |
-| ComplementNB                  | 0.8754 ± 0.0086     | 0.8895     | 0.8884        | 0.33                |
-| LogisticRegression (baseline) | 0.8960 ± 0.0084     | 0.9026     | 0.9018        | 0.38                |
-| **LinearSVC (calibrated)** ⭐ | **0.9021 ± 0.0081** | **0.9041** | **0.9029**    | **0.34**            |
+| Model                      | 5-fold CV Macro F1  | Test Acc   | Test Macro F1 | Latency (ms/sample) |
+| -------------------------- | ------------------- | ---------- | ------------- | ------------------- |
+| Dummy (majority = Fake)    | 0.3534 ± 0.0003     | 0.5465     | 0.3534        | 0.24                |
+| KNN (k=5, cosine)          | 0.8579 ± 0.0204     | 0.8474     | 0.8455        | 0.39                |
+| DecisionTree               | 0.7919 ± 0.0052     | 0.8125     | 0.8097        | 0.25                |
+| ComplementNB               | 0.8754 ± 0.0086     | 0.8895     | 0.8884        | 0.28                |
+| RandomForest (200 trees)   | 0.8873 ± 0.0070     | 0.8910     | 0.8895        | 0.40                |
+| **LogisticRegression** ⭐  | **0.8960 ± 0.0084** | **0.9026** | **0.9018**    | **0.26**            |
 
 Every number above is produced on the same `newmm` text the API serves, so the reported score
 is the live system's score. The train/test split uses `random_state=343` (3 last digits of the
 student ID) everywhere, so `notebooks/learning_evidence.ipynb` reproduces these numbers exactly.
 For reference, the pre-fix pipeline (trained on LimeSoda's own token list, default
-`token_pattern`, then served `newmm` text) measured **0.8696** macro F1 on the identical test
-split — the fix is worth **+3.3 macro F1 points** on the served system.
+`token_pattern`, then served `newmm` text) measured **0.8743** macro F1 on the identical test
+split — the fix is worth **+2.7 macro F1 points** on the served system.
 
 Full details: `results/benchmark_results.md`, `results/evaluation_results.json`.
 
