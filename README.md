@@ -3,7 +3,7 @@
 Classify Thai health news as **Fact** or **Fake** using classical ML, served through a FastAPI backend with a single-file web UI. Built as an AI/ML mini-project (240-318).
 
 - **Data:** [LimeSoda](https://github.com/byinth/LimeSoda) Thai health-news corpus (binary subset: 3,436 docs, Fact 1,558 / Fake 1,878)
-- **Best model:** TF-IDF + LogisticRegression — test macro F1 **0.902**, accuracy 0.903, ~0.3 ms/sample (seed 343).
+- **Best model:** TF-IDF + LogisticRegression — test macro F1 **0.902**, accuracy 0.903, ~0.35 ms/sample (seed 343).
   Training and serving feed the model the *same* PyThaiNLP `newmm` text, so this is also the
   number the live demo produces (100% prediction agreement between the two paths).
 - **UI:** paper/ink styled single-file HTML (works on projector + mobile)
@@ -73,12 +73,12 @@ py src/pick_demo_examples.py
 
 | Model                      | 5-fold CV Macro F1  | Test Acc   | Test Macro F1 | Latency (ms/sample) |
 | -------------------------- | ------------------- | ---------- | ------------- | ------------------- |
-| Dummy (majority = Fake)    | 0.3534 ± 0.0003     | 0.5465     | 0.3534        | 0.24                |
-| KNN (k=5, cosine)          | 0.8579 ± 0.0204     | 0.8474     | 0.8455        | 0.39                |
-| DecisionTree               | 0.7919 ± 0.0052     | 0.8125     | 0.8097        | 0.25                |
-| ComplementNB               | 0.8754 ± 0.0086     | 0.8895     | 0.8884        | 0.28                |
-| RandomForest (200 trees)   | 0.8873 ± 0.0070     | 0.8910     | 0.8895        | 0.40                |
-| **LogisticRegression** ⭐  | **0.8960 ± 0.0084** | **0.9026** | **0.9018**    | **0.26**            |
+| Dummy (majority = Fake)    | 0.3534 ± 0.0003     | 0.5465     | 0.3534        | 0.38                |
+| KNN (k=5, cosine)          | 0.8579 ± 0.0204     | 0.8474     | 0.8455        | 0.56                |
+| DecisionTree               | 0.7919 ± 0.0052     | 0.8125     | 0.8097        | 0.39                |
+| ComplementNB               | 0.8754 ± 0.0086     | 0.8895     | 0.8884        | 0.33                |
+| RandomForest (200 trees)   | 0.8877 ± 0.0071     | 0.8910     | 0.8895        | 0.45                |
+| **LogisticRegression** ⭐  | **0.8960 ± 0.0084** | **0.9026** | **0.9018**    | **0.35**            |
 
 Every number above is produced on the same `newmm` text the API serves, so the reported score
 is the live system's score. The train/test split uses `random_state=343` (3 last digits of the
@@ -107,8 +107,8 @@ Full details: `results/benchmark_results.md`, `results/evaluation_results.json`.
   จากข้อมูลตัวอย่าง ไม่ได้วิเคราะห์ข่าวจริง"*, and the meta line under the headline reads
   `ผลตัวอย่างจากโหมดสำรอง · ไม่ได้วิเคราะห์สด`. Live answers show `โมเดล model_best.joblib · API … ms`.
 - Per-request latency shown by the UI is single-request (4–7 ms); the benchmark's
-  ms/sample figures measure bulk prediction (0.33–0.38 ms for the three shipped models; 0.33–0.54 ms
-  across every model measured in the audit run) and vary ~±0.05 ms between runs.
+  ms/sample figures measure bulk prediction (0.33–0.56 ms across all six models in the latest
+  benchmark run) and vary ~±0.05 ms between runs.
 - Retrain with `train_baseline.py` → `benchmark.py` → `pick_demo_examples.py` in that order;
   pinned env is the `fewnake-310` kernel (Python 3.10 / scikit-learn 1.7.2) used by the
   notebook — pickles warn when loaded by a different scikit-learn version.
